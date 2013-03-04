@@ -1,6 +1,6 @@
-GNSNet [Managed C++ Network Wrappers]
+GNSNet [C++ CLR Network Wrappers]
 =====================================
-Library that simplifies network programming in managed C++ (CLR/.NET),
+Library that simplifies network programming in C++ CLR,
 the library provides a very simplified interface for communicating to the 
 network using TCP/IP sockets, UDP sockets and FTP client. 
 This library is also packaged with a simple "seamless TCP/IP server". i.e. 
@@ -10,7 +10,7 @@ StartService() method at the instance of ServerSocket.
 Platform
 ============================
 This library can be used in any .NET language under .NET framework 2.0 and up.
-It is written in C++.NET but it can be compiled as a DLL and can be easily used
+It is written in C++ CLR but it can be compiled as a DLL and can be easily used
 using other .NET languages like C# and VB.NET.
 
 Requirement
