@@ -18,9 +18,7 @@ namespace GNSNet{
          * Virtual, so that inheriter can destroy it 
          * using this class' pointer
          */
-        virtual ~FtpControlFactory(){
-            delete m_Object;
-        }
+        virtual ~FtpControlFactory(){}
 
     protected:
         /**
@@ -29,12 +27,7 @@ namespace GNSNet{
          * an instance of FtpControl
          */
         virtual Object^ Instance()override{
-            m_Object = gcnew FtpControl();
-            return m_Object;
+            return gcnew FtpControl();
         }
-
-    private:
-        Object^ m_Object;
-
     };
 }

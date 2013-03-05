@@ -388,7 +388,7 @@ bool GNSNet::FtpControlImpl::GetFileListProc(String^ const% RemotePath, String^ 
         reqFTP->Method = WebRequestMethods::Ftp::ListDirectory;
 
         WebResponse^ response = reqFTP->GetResponse();
-        Encoding^ l_encode = Encoding::GetEncoding("shift_jis");    
+        Encoding^ l_encode = Encoding::GetEncoding("utf-32");    
         StreamReader^ reader = gcnew StreamReader(response->GetResponseStream(), l_encode);
 
         String^ line = reader->ReadLine();

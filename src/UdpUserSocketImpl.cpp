@@ -157,7 +157,7 @@ bool GNSNet::UdpUserSocketImpl::Send(String^ const% SendData)
 
     try{        
         array<Byte>^ t_Data;
-        Encoding^ l_encode = Encoding::GetEncoding("shift_jis");    
+        Encoding^ l_encode = Encoding::GetEncoding("utf-32");    
         t_Data = l_encode->GetBytes(SendData);
         Socket::SendTo(t_Data, remoteEP);
     }
@@ -181,7 +181,7 @@ bool GNSNet::UdpUserSocketImpl::Send(String^ const% SendData, String^ const% Hos
         IPEndPoint^ toEndpoint = gcnew IPEndPoint(IPAddress::Parse(HostName), PortNo);
 
         array<Byte>^ t_Data;
-        Encoding^ l_encode = Encoding::GetEncoding("shift_jis");
+        Encoding^ l_encode = Encoding::GetEncoding("utf-32");
         t_Data = l_encode->GetBytes(SendData);
 
         Socket::SendTo(t_Data, toEndpoint);
@@ -204,7 +204,7 @@ bool GNSNet::UdpUserSocketImpl::Send(String^ const% SendData, int Count)
 
     try{
         array<Byte>^ t_Data;
-        Encoding^ l_encode = Encoding::GetEncoding("shift_jis");
+        Encoding^ l_encode = Encoding::GetEncoding("utf-32");
         t_Data = l_encode->GetBytes(SendData);
 
         Socket::SendTo(t_Data, Count, SocketFlags::None, remoteEP);
@@ -275,7 +275,7 @@ bool GNSNet::UdpUserSocketImpl::GetRecord(String^% pRecord, int RecvCount)
     RecvDataLen = RecvCount;
 
     if(RecvDataLen > 0){
-        Encoding^ l_encode = Encoding::GetEncoding("shift_jis");    
+        Encoding^ l_encode = Encoding::GetEncoding("utf-32");    
         pRecord = l_encode->GetString(m_RecvBuf, 0, RecvCount);
 
         delete m_RecvBuf;

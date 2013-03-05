@@ -127,6 +127,7 @@ GNSNet::ServerSocketImpl::ServerSocketImpl()
 
 GNSNet::ServerSocketImpl::~ServerSocketImpl()
 {
+    DestroySocket();
     delete m_Server;
 }
 

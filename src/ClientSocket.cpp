@@ -128,7 +128,7 @@ bool GNSNet::ClientSocket::Send(String^ const% SendData)
     bool ret = true;
     try{
         array<Byte>^ t_Data;
-        Encoding^ l_encode = Encoding::GetEncoding("shift_jis");    
+        Encoding^ l_encode = Encoding::GetEncoding("utf-32");    
         t_Data = l_encode->GetBytes(SendData);
         m_s->Send(t_Data);
     }
@@ -148,7 +148,7 @@ bool GNSNet::ClientSocket::Send(String^ const% SendData, int Count)
     bool ret = true;
     try{
         array<Byte>^ t_Data;
-        Encoding^ l_encode = Encoding::GetEncoding("shift_jis");
+        Encoding^ l_encode = Encoding::GetEncoding("utf-32");
         t_Data = l_encode->GetBytes(SendData);
         m_s->Send(t_Data, Count, SocketFlags::None);
     }
@@ -206,7 +206,7 @@ bool GNSNet::ClientSocket::GetRecord(String^% pRecord, int RecvCount)
     RecvDataLen = RecvCount;
 
     if(RecvDataLen > 0){
-        Encoding^ l_encode = Encoding::GetEncoding("shift_jis");    
+        Encoding^ l_encode = Encoding::GetEncoding("utf-32");    
         pRecord = l_encode->GetString(m_RecvBuf, 0, RecvCount);
 
         delete m_RecvBuf;

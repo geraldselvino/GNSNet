@@ -15,7 +15,7 @@ namespace GNSNet{
     ref class FtpControl;
     ref class NetworkFactory;
 
-    public ref class GNSNetFactory
+    public ref class GNSNetFactory sealed
     {
     public:
         /**
@@ -30,10 +30,9 @@ namespace GNSNet{
 
     private:
         /**
-         * Make the constructor, destructor, copy constructor,
+         * Make the default constructor, destructor, copy constructor,
          * assignment operator private, so that this factory
-         * class cannot be instantiated. This is following the
-         * Null Object pattern
+         * class cannot be instantiated, copied and assigned
          */
         GNSNetFactory(){}
         ~GNSNetFactory(){}

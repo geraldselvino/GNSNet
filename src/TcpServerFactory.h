@@ -18,9 +18,7 @@ namespace GNSNet{
          * Virtual, so that inheriter can destroy it 
          * using this class' pointer
          */
-        virtual ~TcpServerFactory(){
-            delete m_Object;
-        }
+        virtual ~TcpServerFactory(){}
 
     protected:
         /**
@@ -29,12 +27,7 @@ namespace GNSNet{
          * an instance of ServerSocket
          */
         virtual Object^ Instance()override{
-            m_Object = gcnew ServerSocket();
-            return m_Object;
+            return gcnew ServerSocket();
         }
-
-    private:
-        Object^ m_Object;
-
     };
 }

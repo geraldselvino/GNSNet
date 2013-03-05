@@ -18,9 +18,7 @@ namespace GNSNet{
          * Virtual, so that inheriter can destroy it 
          * using this class' pointer
          */
-        virtual ~UdpUserFactory(){
-            delete m_Object;
-        }
+        virtual ~UdpUserFactory(){}
 
     protected:
         /**
@@ -29,12 +27,7 @@ namespace GNSNet{
          * an instance of UdpUserSocket
          */
         virtual Object^ Instance()override{
-            m_Object = gcnew UdpUserSocket();
-            return m_Object;
+            return gcnew UdpUserSocket();
         }
-
-    private:
-        Object^ m_Object;
-
     };
 }
