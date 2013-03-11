@@ -1,4 +1,3 @@
-#include <Stdafx.h> //include to allow precompiled header in Visual Studio
 #include "GNSNetFactory.h"
 #include "TcpClientFactory.h"
 #include "TcpServerFactory.h"

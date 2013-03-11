@@ -1,4 +1,3 @@
-#include <Stdafx.h> //include to allow precompiled header in Visual Studio
 #include "UdpUserSocket.h"
 #include "UdpUserSocketImpl.h"
 #include "ScopeLock.h"
@@ -52,9 +51,9 @@ bool GNSNet::UdpUserSocket::Recv(String^% pData)
     return pImplUdpUserSocket->Recv(pData);
 }
 
-bool GNSNet::UdpUserSocket::GetClientName()
+bool GNSNet::UdpUserSocket::DiscoverClientName()
 {
-    return pImplUdpUserSocket->GetClientName();
+    return pImplUdpUserSocket->DiscoverClientName();
 }
 
 bool GNSNet::UdpUserSocket::GetClientName(String^% HostName, String^% PortNo)
@@ -79,8 +78,11 @@ GNSNet::UdpUserSocketImpl::UdpUserSocketImpl()
 : Socket(System::Net::Sockets::AddressFamily::InterNetwork, 
          System::Net::Sockets::SocketType::Dgram, 
          System::Net::Sockets::ProtocolType::Udp),
-  m_DataLen(0), m_RecvBuf(gcnew array<Byte>(UDPRECVBUF_SIZE)),
-  m_SockStatus(false), m_HostName(""), m_Port("")
+  m_DataLen(0), 
+  m_RecvBuf(gcnew array<Byte>(UDPRECVBUF_SIZE)),
+  m_SockStatus(false), 
+  m_HostName(""), 
+  m_Port("")
 {
 }
 
@@ -288,7 +290,7 @@ bool GNSNet::UdpUserSocketImpl::GetRecord(String^% pRecord, int RecvCount)
     return ret;
 }
 
-bool GNSNet::UdpUserSocketImpl::GetClientName()
+bool GNSNet::UdpUserSocketImpl::DiscoverClientName()
 {
     String^ HostName;
     String^ PortNo;

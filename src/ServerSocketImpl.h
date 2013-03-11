@@ -94,8 +94,8 @@ namespace GNSNet{
         /**
          * Internal method only, method run by the Receive and Accept thread 
          */
-        void Receive(Object^ pObj);
-        void Accept(Object^ pObj);
+        void Receive();
+        void ServiceProc();
 
     private:
         /**
@@ -104,9 +104,8 @@ namespace GNSNet{
         int                m_ClientNo;         /**Number of clients counter*/
         String^            m_HostName;         /**Stores the host name*/
         String^            m_Port;             /**Stores the port number*/
-        ManualResetEvent^  m_RecvMessageEvent; /**Synchronization Event to unsignal/signal the Recv 
-                                                 method to stop/continue*/
         Semaphore^         m_AcceptSema;       /**Semaphore to control the number of client connections*/
-
+        ManualResetEvent^  m_RecvMessageEvent; /**Synchronization Event to unsignal/signal the Recv 
+                                                  method to stop/continue*/
     };
 }

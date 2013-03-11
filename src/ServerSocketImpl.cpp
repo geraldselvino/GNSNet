@@ -1,4 +1,3 @@
-#include <Stdafx.h> //include to allow precompiled header in Visual Studio
 #include "ServerSocket.h"
 #include "ServerSocketImpl.h"
 #include "ClientSocket.h"
@@ -16,12 +15,12 @@
  * ClientNo member.
  */
 
-namespace GNSNet{
-    ref struct ReceiveParam{
-        int ClientNo;
-        String^ RecvData;
-    };
-}
+//namespace GNSNet{
+//    ref struct ReceiveParam{
+//        int ClientNo;
+//        String^ RecvData;
+//    };
+//}
 
 /**
  * Definition of the Handle class(ServerSocket)
@@ -117,7 +116,8 @@ bool GNSNet::ServerSocket::SetKeepAliveOption(int Enable)
  */
 
 GNSNet::ServerSocketImpl::ServerSocketImpl()
-: m_ClientNo(0), m_Server(gcnew ClientSocket()),
+: m_ClientNo(0), 
+  m_Server(gcnew ClientSocket()),
   m_ClientHandle(gcnew Dictionary<int, ClientSocket^>()),
   m_RecvMessage(gcnew LinkedList<ReceiveParam^>()),
   m_RecvMessageEvent(gcnew ManualResetEvent(false)),
@@ -170,15 +170,11 @@ bool GNSNet::ServerSocketImpl::StartService(int PortNo)
 
     try{
         if(CreateSocket(PortNo)){
-            ParameterizedThreadStart^ pAcceptProc = gcnew ParameterizedThreadStart(this, &ServerSocketImpl::Accept);
+            ThreadStart^ pAcceptProc = gcnew ThreadStart(this, &ServerSocketImpl::ServiceProc);
             Thread^ pAcceptThread = gcnew Thread(pAcceptProc);
             pAcceptThread->Priority = ThreadPriority::Normal;
-            pAcceptThread->Start(this);
-
-            ParameterizedThreadStart^ pReceiveProc = gcnew ParameterizedThreadStart(this, &ServerSocketImpl::Receive);
-            Thread^ pReceiveThread = gcnew Thread(pReceiveProc);
-            pReceiveThread->Priority = ThreadPriority::Normal;
-            pReceiveThread->Start(this);
+            pAcceptThread->IsBackground = true;
+            pAcceptThread->Start();
         }
         else{
             ret = false;
@@ -196,14 +192,14 @@ bool GNSNet::ServerSocketImpl::Accept()
 {
     bool ret;
 
-    ClientSocket^ m_Client;
+    ClientSocket^ m_Client = gcnew ClientSocket();
 
     ret = m_Server->Accept(m_Client);
 
     if(ret){
         m_AcceptSema->WaitOne();
         ++m_ClientNo;
-        m_Client->GetClientName();
+        m_Client->DiscoverClientName();
         m_ClientHandle->Add(m_ClientNo, m_Client);
     }
 
@@ -259,41 +255,51 @@ bool GNSNet::ServerSocketImpl::Send(String^ const% SendData, int Count, int Clie
     return ret;
 }
 
-void GNSNet::ServerSocketImpl::Accept(Object^ pObj)
+void GNSNet::ServerSocketImpl::ServiceProc()
 {
-    while(true){
-        Accept();
-        Thread::Sleep(20);
+    while(true){    
+        if(Accept()){
+            ThreadStart^ pReceiveProc = gcnew ThreadStart(this, &ServerSocketImpl::Receive);
+            Thread^ pReceiveThread = gcnew Thread(pReceiveProc);
+            pReceiveThread->Priority = ThreadPriority::Normal;
+            pReceiveThread->IsBackground = true;
+            pReceiveThread->Start();
+        }
+        Thread::Sleep(10);
     }
 }
 
-void GNSNet::ServerSocketImpl::Receive(Object^ pObj)
+void GNSNet::ServerSocketImpl::Receive()
 {
-    ServerSocketImpl^ l_Server = dynamic_cast<ServerSocketImpl^>(pObj);
-    ReceiveParam^ l_RecvMessage = gcnew ReceiveParam();
-    l_RecvMessage->ClientNo = l_Server->m_ClientNo;
     while(true){
-        if(m_RecvMessage->Count<RECVMSG_MAX){
-            if(Recv(l_RecvMessage->RecvData, l_RecvMessage->ClientNo)){
-                ScopeLock l_Lock(m_RecvMessage); //mutex lock, only one thread should access the m_RecvMessage
-                m_RecvMessage->AddLast(l_RecvMessage);
+        {
+            ScopeLock l_Lock(m_RecvMessage); //mutex lock, only one thread should access the m_RecvMessage
+            if(m_RecvMessage->Count < RECVMSG_MAX){
+
+                ReceiveParam^ l_RecvMessage = gcnew ReceiveParam();
+                l_RecvMessage->ClientNo = m_ClientNo;
+
+                if(Recv(l_RecvMessage->RecvData, l_RecvMessage->ClientNo)){
+                    m_RecvMessage->AddLast(l_RecvMessage);
+                }
+            }
+            else{
+                m_RecvMessageEvent->Reset(); //message queue is full so unsignal the Event
+                m_RecvMessageEvent->WaitOne(); //Wait here until there is a room at m_RecvData
             }
         }
-        else{
-            m_RecvMessageEvent->Reset(); //message queue is full so unsignal the Event
-            m_RecvMessageEvent->WaitOne(); //Wait here until there is a room at m_RecvData
-        }
-        Thread::Sleep(20);
+        Thread::Sleep(10);
     }
 }
 
 GNSNet::ReceiveParam^ GNSNet::ServerSocketImpl::ReadMessage()
 {
+    ScopeLock l_Lock(m_RecvMessage); //mutex lock, only one thread should access the m_RecvMessage
+
     ReceiveParam^ l_MsgNode = nullptr;
 
     if(m_RecvMessage->Count>0){
-        ScopeLock l_Lock(m_RecvMessage); //mutex lock, only one thread should access the m_RecvMessage
-        l_MsgNode = dynamic_cast<ReceiveParam^>(m_RecvMessage->Last);
+        l_MsgNode = m_RecvMessage->Last->Value;
         m_RecvMessage->RemoveLast();
 
         m_RecvMessageEvent->Set(); //signal the event, Recv() will continue

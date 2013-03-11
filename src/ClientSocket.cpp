@@ -1,4 +1,3 @@
-#include <Stdafx.h> //include to allow precompiled header in Visual Studio
 #include "ClientSocket.h"
 #include "ScopeLock.h"
 
@@ -7,7 +6,11 @@
  */
 
 GNSNet::ClientSocket::ClientSocket()
-: m_DataLen(0), m_Connect(false), m_RecvBuf(gcnew array<Byte>(RECVBUF_SIZE))
+: m_DataLen(0), 
+  m_Connect(false), 
+  m_RecvBuf(gcnew array<Byte>(RECVBUF_SIZE)),
+  m_HostName(""),
+  m_Port("")
 {
     InitSocket();
 }
@@ -68,7 +71,7 @@ bool GNSNet::ClientSocket::Connect(String^ const% HostName, int Port)
     }
 
     m_DataLen = 0;
-    SetClientName("", "");
+    //SetClientName("", "");
 
     try{
         m_s->Connect(HostName, Port);
@@ -219,7 +222,7 @@ bool GNSNet::ClientSocket::GetRecord(String^% pRecord, int RecvCount)
     return ret;
 }
 
-bool GNSNet::ClientSocket::GetClientName()
+bool GNSNet::ClientSocket::DiscoverClientName()
 {
     String^ HostName;
     String^ PortNo;

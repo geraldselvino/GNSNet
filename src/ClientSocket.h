@@ -46,7 +46,7 @@ namespace GNSNet{
         bool Recv(String^% pData);
         bool IsConnect(){ return m_Connect; }
         int  LastError(){ return m_nLastError; }
-        bool GetClientName();
+        bool DiscoverClientName();
         bool GetClientName(String^% HostName, String^% PortNo);
         bool CreateSocket(int PortNo);
         bool CreateSocket();

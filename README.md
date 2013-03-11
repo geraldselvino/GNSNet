@@ -2,10 +2,7 @@ GNSNet [C++/CLI Network Wrappers]
 =====================================
 Library that simplifies network programming in C++/CLI,
 the library provides a very simplified interface for communicating to the 
-network using TCP/IP sockets, UDP sockets and FTP client. 
-This library is also packaged with a simple "seamless TCP/IP server". i.e. 
-you can have a simple yet fully working multi-client server just by invoking 
-StartService() method at the instance of ServerSocket.
+network using TCP/IP sockets, UDP sockets and also includes a class library that can be used as an FTP client. This library is also packaged with a simple yet fully functioning multi-client TCP/IP server through the StartService() method.
 
 Platform
 ============================

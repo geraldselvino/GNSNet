@@ -18,7 +18,22 @@ namespace GNSNet{
      * because we just need a reference of it here
      */
     ref class ServerSocketImpl;
-    ref struct ReceiveParam;
+
+    /**
+     * Definition of the ReceiveParam structure, use
+     * for storing the message received from a client
+     * an its client number, so that the server knows
+     * which client to send a reply. This is needed
+     * because the messages received are buffered, so 
+     * that the server does not reply upon receipt of
+     * the message from the client. If it needs to reply,
+     * it will know which client to send reply thru the
+     * ClientNo member.
+     */
+    public ref struct ReceiveParam{
+        int ClientNo;
+        String^ RecvData;
+    };
 
     public ref class ServerSocket
     {

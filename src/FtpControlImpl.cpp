@@ -1,4 +1,3 @@
-#include <Stdafx.h> //include to allow precompiled header in Visual Studio
 #include "FtpControl.h"
 #include "FtpControlImpl.h"
 

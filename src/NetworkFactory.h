@@ -33,7 +33,7 @@ namespace GNSNet{
         /**
          * Pure virtual method to be implemented
          * by the implementation factories, this is
-         * to simulat a Virtual Constructor Idiom
+         * to simulate a Virtual Constructor(Idiom)
          */
         virtual Object^ Instance() = 0;
     };

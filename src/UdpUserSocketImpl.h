@@ -41,7 +41,7 @@ namespace GNSNet{
         bool Send(String^ const% SendData, String^ const% HostName, int PortNo);
         bool Send(String^ const% SendData, int Count);
         bool Recv(String^% pData);
-        bool GetClientName();
+        bool DiscoverClientName();
         bool GetClientName(String^% HostName, String^% PortNo);
         bool CreateSocket(int PortNo);
         bool CreateSocket(int PortNo, String^ const% HostName);
