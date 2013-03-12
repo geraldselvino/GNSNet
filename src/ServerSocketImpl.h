@@ -66,6 +66,7 @@ namespace GNSNet{
         bool DestroySocket();          /**Disconnect the server socket*/
         int  LastError(int ClientNo);  /**Returns the error code that is last encountered*/
         int  LastError();              /**Returns the error code that is last encountered*/
+        int  LastClient() { return m_ClientNo; }
         bool CreateSocket(int PortNo); /**Create a socket, bind and listen*/
         bool SetKeepAliveOption(int Enable);   /**Set the socket option to KeepAlive*/
         virtual bool StartService(int PortNo); /**Seamless server method, overridable, so that 

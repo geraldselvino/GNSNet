@@ -56,6 +56,11 @@ int GNSNet::ServerSocket::LastError(int ClientNo)
     return pImplServerSocket->LastError(ClientNo);
 }
 
+int GNSNet::ServerSocket::LastClient()
+{
+    return pImplServerSocket->LastClient();
+}
+
 bool GNSNet::ServerSocket::StartService(int PortNo)
 {
     return pImplServerSocket->StartService(PortNo);
@@ -181,7 +186,7 @@ bool GNSNet::ServerSocketImpl::StartService(int PortNo)
         }
     }
     catch(SocketException^ e){
-        Console::WriteLine(e->ToString());
+        Console::WriteLine(e->Message);
         ret = false;
     }
 

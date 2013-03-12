@@ -60,6 +60,7 @@ namespace GNSNet{
         bool DestroySocket();
         int  LastError(int ClientNo);
         int  LastError();
+        int  LastClient();
         bool CreateSocket(int PortNo);
         bool SetKeepAliveOption(int Enable);
         bool StartService(int PortNo);

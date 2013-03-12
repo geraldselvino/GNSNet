@@ -209,6 +209,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\test_UdpClient.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\test_UdpServer.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\UdpUserSocketImpl.cpp"
 				>
 			</File>
@@ -267,6 +275,14 @@
 			</File>
 			<File
 				RelativePath=".\src\test_TcpServer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\test_UdpClient.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\test_UdpServer.h"
 				>
 			</File>
 			<File

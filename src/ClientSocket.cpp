@@ -10,7 +10,8 @@ GNSNet::ClientSocket::ClientSocket()
   m_Connect(false), 
   m_RecvBuf(gcnew array<Byte>(RECVBUF_SIZE)),
   m_HostName(""),
-  m_Port("")
+  m_Port(""),
+  m_nLastError(0)
 {
     InitSocket();
 }
@@ -71,7 +72,6 @@ bool GNSNet::ClientSocket::Connect(String^ const% HostName, int Port)
     }
 
     m_DataLen = 0;
-    //SetClientName("", "");
 
     try{
         m_s->Connect(HostName, Port);

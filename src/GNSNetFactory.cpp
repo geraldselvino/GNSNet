@@ -16,7 +16,7 @@ GNSNet::ServerSocket^ GNSNet::GNSNetFactory::getTcpServerSocket(){
 }
 
 GNSNet::UdpUserSocket^ GNSNet::GNSNetFactory::getUdpUserSocket(){
-    NetworkFactory^ m_Factory = gcnew TcpClientFactory();
+    NetworkFactory^ m_Factory = gcnew UdpUserFactory();
     return dynamic_cast<UdpUserSocket^>(m_Factory->getInstance());
 }
 

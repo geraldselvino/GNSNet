@@ -34,8 +34,8 @@ namespace GNSNetTest{
         Assert::AreEqual(true, ret);
         Assert::AreNotEqual("", t_host);
         Assert::AreNotEqual("", t_port);
-        Console::WriteLine("Hostname: {0}", t_host);
-        Console::WriteLine("Portnum: {0}", t_port);
+        Console::WriteLine("Client=>Host: {0}", t_host);
+        Console::WriteLine("Client=>Port: {0}", t_port);
         ret = m_Client->Disconnect();
         Assert::AreEqual(true, ret);
         Console::WriteLine("Disconnected successfully");
@@ -79,7 +79,7 @@ namespace GNSNetTest{
         bool ret = m_Client->Recv(t_MsgRecv);
         Assert::AreEqual(true, ret);
         Assert::AreNotEqual("", t_MsgRecv);
-        Console::WriteLine("Received data: {0}", t_MsgRecv);
+        Console::WriteLine("Client=> Data: {0}", t_MsgRecv);
         ret = m_Client->Disconnect();
         Assert::AreEqual(true, ret);
         Console::WriteLine("Disconnected successfully");

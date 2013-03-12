@@ -82,7 +82,8 @@ GNSNet::UdpUserSocketImpl::UdpUserSocketImpl()
   m_RecvBuf(gcnew array<Byte>(UDPRECVBUF_SIZE)),
   m_SockStatus(false), 
   m_HostName(""), 
-  m_Port("")
+  m_Port(""),
+  m_nLastError(0)
 {
 }
 
@@ -296,13 +297,13 @@ bool GNSNet::UdpUserSocketImpl::DiscoverClientName()
     String^ PortNo;
     bool ret = true;
     try{
-        IPEndPoint^ pRemoteEndPoint = dynamic_cast<IPEndPoint^>(Socket::RemoteEndPoint);
+        IPEndPoint^ pRemoteEndPoint = dynamic_cast<IPEndPoint^>(remoteEP);
         HostName = pRemoteEndPoint->Address->ToString();
         PortNo = String::Format("{0:0000}",pRemoteEndPoint->Port.ToString());
     }
     catch(SocketException^ e){
-        HostName = "None";
-        PortNo = "None";
+        HostName = "";
+        PortNo = "";
         m_nLastError = e->ErrorCode;
         ret = false;
     }

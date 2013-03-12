@@ -9,18 +9,18 @@ using namespace System::Threading;
 namespace GNSNetTest{
 
 	[TestFixture]
-	public ref class TestTcpClient
+	public ref class TestUdpClient
 	{
 	public:
 		[SetUp] void Init();
 
-        [Test] void Connect();
-		[Test] void GetClientName();
+        [Test] void CreateSocket();
+        [Test] void LastError();
+        [Test] void GetClientName();
         [Test] void Send();
-        [Test] void SetKeepAlive();
 
     private:
-        GNSNet::ClientSocket^ m_Client;
-        void threadProc();
+        GNSNet::UdpUserSocket^ m_UdpClient;
+        void threadproc();
     };
 }
