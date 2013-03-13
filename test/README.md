@@ -5,4 +5,6 @@ The contents of this directory and its subdirectories are the test codes for GNS
 Requirement
 ============================
 - Visual C++ 2008 express or higher
+- .Net framework 2.0 and up
 - NUnit 2.0+
+- FTP Server for testing the FtpControl class
