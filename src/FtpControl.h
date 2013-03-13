@@ -34,8 +34,6 @@ namespace GNSNet{
         /**
          * Interfaces to the outside world 
          */
-        void SetLogInfo(int LogKind);
-        void SetLogInfo(int LogKind, int LogOutFlag);
         void SetHostInfo(String^ const% HostName, String^ const% PortNo, String^ const% UserName, String^ const% Password);
         void SetHostName(String^ const% HostName);
         bool FtpConnect();
@@ -45,10 +43,10 @@ namespace GNSNet{
         /**
          * Interfaces to the outside world 
          */
-        bool FileDownload(String^ const% RemotePath, String^ const% LocalPath, String^ const% RemoteFileName);
-        bool FileDownload(String^ RemotePath, String^ LocalPath, String^ const% RemoteFileName, String^ LocalFileName);
-        bool FileUpload(String^ const% RemotePath, String^ const% LocalPath, String^ const% RemoteFileName);
-        bool FileUpload(String^ RemotePath, String^ LocalPath, String^ const% RemoteFileName, String^ LocalFileName);
+        bool FileDownload(String^ const% RemotePath, String^ const% RemoteFileName, String^ const% LocalPath);
+        bool FileDownload(String^ RemotePath, String^ RemoteFileName, String^ const% LocalPath, String^ LocalFileName);
+        bool FileUpload(String^ const% LocalPath, String^ const% LocalFileName, String^ const% RemotePath);
+        bool FileUpload(String^ LocalPath, String^ LocalFileName, String^ const% RemotePath, String^ RemoteFileName);
         bool GetFileList(String^ RemotePath, String^ const% AllFileName, LinkedList<String^>^% FileList);
 
     private:

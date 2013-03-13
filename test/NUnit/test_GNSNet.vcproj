@@ -201,6 +201,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\test_FtpClient.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\test_TcpClient.cpp"
 				>
 			</File>
@@ -267,6 +271,10 @@
 			</File>
 			<File
 				RelativePath="..\..\src\TcpServerFactory.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\test_FtpClient.h"
 				>
 			</File>
 			<File

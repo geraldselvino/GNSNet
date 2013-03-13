@@ -25,16 +25,6 @@ void GNSNet::FtpControl::SetHostName(String^ const% HostName)
     return pImplFtpControl->SetHostName(HostName);
 }
 
-void GNSNet::FtpControl::SetLogInfo(int LogKind)
-{
-    return pImplFtpControl->SetLogInfo(LogKind);
-}
-
-void GNSNet::FtpControl::SetLogInfo(int LogKind, int LogOutFlag)
-{
-    return pImplFtpControl->SetLogInfo(LogKind, LogOutFlag);
-}
-
 bool GNSNet::FtpControl::FtpConnect()
 {
     return pImplFtpControl->FtpConnect();
@@ -75,7 +65,11 @@ bool GNSNet::FtpControl::GetFileList(String^ RemotePath, String^ const% AllFileN
  */
 
 GNSNet::FtpControlImpl::FtpControlImpl()
-: m_ConnectFlag(false)
+: m_ConnectFlag(false),
+  m_HostName("localhost"),
+  m_PortNo("21"),
+  m_UserName(""),
+  m_Password("")
 {
 }
 
@@ -97,19 +91,9 @@ void GNSNet::FtpControlImpl::SetHostName(String^ const% HostName)
     m_HostName = HostName;
 }
 
-void GNSNet::FtpControlImpl::SetLogInfo(int LogKind)
-{
-    SetLogInfo(LogKind, false);
-}
-
-void GNSNet::FtpControlImpl::SetLogInfo(int LogKind, int LogOutFlag)
-{
-    m_LogKind = LogKind;
-    m_LogOutFlag = LogOutFlag;
-}
-
 bool GNSNet::FtpControlImpl::FtpConnect()
 {
+    bool ret = true;
     String^ Log;
 
     if(m_ConnectFlag){
@@ -121,42 +105,45 @@ bool GNSNet::FtpControlImpl::FtpConnect()
         reqFTP->Credentials = gcnew NetworkCredential(m_UserName, m_Password);
         reqFTP->KeepAlive = false;
         m_ConnectFlag = true;
+        Log = String::Format("FtpConnect() successfuly connected at [{0}:{1}]", m_HostName, m_PortNo);
+        Console::WriteLine(Log);
     }
     catch(Exception^ e){
         m_ConnectFlag = false;
         Log = "FtpConnect() throws an exception! " + e->Message;
-        LogOut(Log);
-        return false;
+        Console::WriteLine(Log);
+        ret = false;
     }
 
-    Log = String::Format("FtpConnect() successfuly connected at [{0}:{1}]", m_HostName, m_PortNo);
-    LogOut(Log);
-
-    return true;
+    return ret;
 }
 
 bool GNSNet::FtpControlImpl::FtpDisconnect()
 {
-    if(!m_ConnectFlag) return true;
+    bool ret = true;
+    if(!m_ConnectFlag){
+        return true;
+    }
 
     try{
         reqFTP->Abort();
         delete reqFTP;
         m_ConnectFlag = false;
-        return true;
     }
     catch(Exception^ e){
-        LogOut(e->Message);
-        return false;
+        Console::WriteLine(e->Message);
+        ret = false;
     }
+
+    return ret;
 }
 
-bool GNSNet::FtpControlImpl::FileDownload(String^ const% RemotePath, String^ const% LocalPath, String^ const% RemoteFileName)
+bool GNSNet::FtpControlImpl::FileDownload(String^ const% RemotePath, String^ const% RemoteFileName, String^ const% LocalPath)
 {
-    return(FileDownload(RemotePath, LocalPath, RemoteFileName, ""));
+    return(FileDownload(RemotePath, RemoteFileName, LocalPath, ""));
 }
 
-bool GNSNet::FtpControlImpl::FileDownload(String^ RemotePath, String^ LocalPath, String^ const% RemoteFileName, String^ LocalFileName)
+bool GNSNet::FtpControlImpl::FileDownload(String^ RemotePath, String^ const% RemoteFileName, String^ LocalPath, String^ LocalFileName)
 {
     if(LocalFileName == ""){
         LocalFileName = RemoteFileName;
@@ -165,16 +152,16 @@ bool GNSNet::FtpControlImpl::FileDownload(String^ RemotePath, String^ LocalPath,
     String^ Log;
 
     Log = String::Format("Starting file download...");
-    LogOut(Log, LOGMODE::LOGMODE_START);
+    Console::WriteLine(Log);
     Log = String::Format("Source file: {0}{1} -> Destination file: {2}{3}", RemotePath, RemoteFileName, LocalPath, LocalFileName);
-    LogOut(Log);
+    Console::WriteLine(Log);
 
     char From = '\\';
     char To = '/';
     RemotePath = RemotePath->Replace(From, To);
     LocalPath = LocalPath->Replace(From, To);
 
-    bool ret = FileDownloadProc(RemotePath, LocalPath, RemoteFileName, LocalFileName);
+    bool ret = FileDownloadProc(RemotePath, RemoteFileName, LocalPath, LocalFileName);
 
     if(ret){
         Log = String::Format("File download successful!");
@@ -183,34 +170,34 @@ bool GNSNet::FtpControlImpl::FileDownload(String^ RemotePath, String^ LocalPath,
         Log = String::Format("File download failed!");
     }
 
-    LogOut(Log, LOGMODE::LOGMODE_END);
+    Console::WriteLine(Log);
 
     return ret;
 }
 
-bool GNSNet::FtpControlImpl::FileUpload(String^ const% RemotePath, String^ const% LocalPath, String^ const% RemoteFileName)
+bool GNSNet::FtpControlImpl::FileUpload(String^ const% LocalPath, String^ const% LocalFileName, String^ const% RemotePath)
 {
-    return(FileUpload(RemotePath, LocalPath, RemoteFileName, ""));
+    return(FileUpload(LocalPath, LocalFileName, RemotePath, ""));
 }
 
-bool GNSNet::FtpControlImpl::FileUpload(String^ RemotePath, String^ LocalPath, String^ const% RemoteFileName, String^ LocalFileName)
+bool GNSNet::FtpControlImpl::FileUpload(String^ LocalPath, String^ const% LocalFileName, String^ RemotePath, String^ RemoteFileName)
 {
-    if(LocalFileName == ""){
-        LocalFileName = RemoteFileName;
+    if(RemoteFileName == ""){
+        RemoteFileName = LocalFileName;
     }
 
     String^ Log;
     Log = String::Format("Starting file upload...");
-    LogOut(Log, LOGMODE::LOGMODE_START);
+    Console::WriteLine(Log);
     Log = String::Format("Destination file: {0}{1} <- Source file: {2}{3}", RemotePath, RemoteFileName, LocalPath, LocalFileName);
-    LogOut(Log);
+    Console::WriteLine(Log);
 
     char From = '\\';
     char To = '/';
     RemotePath = RemotePath->Replace(From, To);
     LocalPath = LocalPath->Replace(From, To);
 
-    bool ret = FileUploadProc(RemotePath, LocalPath, RemoteFileName, LocalFileName);
+    bool ret = FileUploadProc(LocalPath, LocalFileName, RemotePath, RemoteFileName);
 
     if(ret){
         Log = String::Format("File upload successful!");
@@ -219,7 +206,7 @@ bool GNSNet::FtpControlImpl::FileUpload(String^ RemotePath, String^ LocalPath, S
         Log = String::Format("File upload failed!");
     }
 
-    LogOut(Log, LOGMODE::LOGMODE_END);
+    Console::WriteLine(Log);
 
     return ret;
 }
@@ -228,9 +215,9 @@ bool GNSNet::FtpControlImpl::GetFileList(String^ RemotePath, String^ const% AllF
 {
     String^ Log;
     Log = String::Format("Listing Directory...");
-    LogOut(Log, LOGMODE::LOGMODE_START);
+    Console::WriteLine(Log);
     Log = String::Format("Directory path: {0}{1}", RemotePath, AllFileName);
-    LogOut(Log);
+    Console::WriteLine(Log);
 
     char From = '\\';
     char To = '/';
@@ -245,29 +232,17 @@ bool GNSNet::FtpControlImpl::GetFileList(String^ RemotePath, String^ const% AllF
         Log = String::Format("Directory list failed!");
     }
 
-    LogOut(Log, LOGMODE::LOGMODE_END);
+    Console::WriteLine(Log);
 
     return ret;
 }
 
-bool GNSNet::FtpControlImpl::FileDownloadProc(String^ const% RemotePath, String^ const% LocalPath, String^ const% RemoteFileName)
+bool GNSNet::FtpControlImpl::FileDownloadProc(String^ const% RemotePath, String^ const% RemoteFileName, String^ const% LocalPath, String^ const% LocalFileName)
 {
-    return(FileDownloadProc(RemotePath, LocalPath, RemoteFileName, ""));
-}
-
-bool GNSNet::FtpControlImpl::FileDownloadProc(String^ const% RemotePath, String^ const% LocalPath, String^ const% RemoteFileName, String^ LocalFileName)
-{
-    if(LocalFileName == ""){
-        LocalFileName = RemoteFileName;
-    }
-
-    bool ret = FtpConnect();
-    if(!ret){
-        return false;
-    }
+    bool ret = true;
 
     if(!m_ConnectFlag){
-        LogOut("FileDownload() – error! there is no connection established");
+        Console::WriteLine("FileDownload() – error! there is no connection established");
         return false;
     }
 
@@ -296,35 +271,21 @@ bool GNSNet::FtpControlImpl::FileDownloadProc(String^ const% RemotePath, String^
         ftpStream->Close();
         outputStream->Close();
         response->Close();
-
-        FtpDisconnect();
     }
     catch (Exception^ e){
-        LogOut(RemoteFileName + " download failed! " + e->Message);
-        return false;
+        Console::WriteLine(RemoteFileName + " download failed! " + e->Message);
+        ret = false;
     }
     
-    return true;
+    return ret;
 }
 
-bool GNSNet::FtpControlImpl::FileUploadProc(String^ const% RemotePath, String^ const% LocalPath, String^ const% RemoteFileName)
+bool GNSNet::FtpControlImpl::FileUploadProc(String^ const% LocalPath, String^ const% LocalFileName, String^ const% RemotePath, String^ const% RemoteFileName)
 {
-    return(FileUploadProc(RemotePath, LocalPath, RemoteFileName, ""));
-}
-
-bool GNSNet::FtpControlImpl::FileUploadProc(String^ const% RemotePath, String^ const% LocalPath, String^ const% RemoteFileName, String^ LocalFileName)
-{
-    if(LocalFileName == ""){
-        LocalFileName = RemoteFileName;
-    }
-
-    bool ret = FtpConnect();
-    if(!ret){
-        return false;
-    }
+    bool ret = true;
 
     if(!m_ConnectFlag){
-        LogOut("FileUpload() – error! there is no connection established");
+        Console::WriteLine("FileUpload() – error! there is no connection established");
         return false;
     }
 
@@ -354,26 +315,20 @@ bool GNSNet::FtpControlImpl::FileUploadProc(String^ const% RemotePath, String^ c
 
         strm->Close();
         fs->Close();
-
-        FtpDisconnect();
     }
     catch(Exception^ e){
-        LogOut(RemoteFileName + " upload failed! " + e->Message);
-        return false; 
+        Console::WriteLine(RemoteFileName + " upload failed! " + e->Message);
+        ret = false; 
     }
 
-    return true;
+    return ret;
 }
 
 bool GNSNet::FtpControlImpl::GetFileListProc(String^ const% RemotePath, String^ const% AllFileName, LinkedList<String^>^% FileList)
 {
-    bool ret = FtpConnect();
-    if(!ret){
-        return false;
-    }
-
+    bool ret = true;
     if(!m_ConnectFlag){
-        LogOut("GetFileListProc() – error! there is no connection established");
+        Console::WriteLine("GetFileListProc() – error! there is no connection established");
         return false;
     }
 
@@ -387,15 +342,13 @@ bool GNSNet::FtpControlImpl::GetFileListProc(String^ const% RemotePath, String^ 
         reqFTP->Method = WebRequestMethods::Ftp::ListDirectory;
 
         WebResponse^ response = reqFTP->GetResponse();
-        Encoding^ l_encode = Encoding::GetEncoding("utf-32");    
+        Encoding^ l_encode = Encoding::GetEncoding("utf-8");    
         StreamReader^ reader = gcnew StreamReader(response->GetResponseStream(), l_encode);
 
-        String^ line = reader->ReadLine();
-
-        while(line!=nullptr){
+        String^ line;
+        while((line=reader->ReadLine())!=nullptr){
             result->Append(line);
             result->Append("\n");
-            line = reader->ReadLine();
         }
 
         //remove the trailing '\n'
@@ -407,37 +360,11 @@ bool GNSNet::FtpControlImpl::GetFileListProc(String^ const% RemotePath, String^ 
         for(int i=0 ; i<=tmpList->GetUpperBound(0); i++){
             FileList->AddLast(tmpList[i]);
         }
-
-        FtpDisconnect();
     }
     catch(Exception^ e){
-        LogOut(AllFileName + " list failed! " + e->Message);
-        return false;
+        Console::WriteLine(AllFileName + " list failed! " + e->Message);
+        ret = false;
     }
 
-    return true;
-}
-
-void GNSNet::FtpControlImpl::LogOut(String^ const% Log)
-{
-    LogOut(Log, LOGMODE::LOGMODE_NONE);
-}
-
-void GNSNet::FtpControlImpl::LogOut(String^ const% Log, LOGMODE LogMode)
-{
-    String^ Header;
-    
-    switch(LogMode){
-    case LOGMODE::LOGMODE_START:
-        Header = "„¡";
-        break;
-    case LOGMODE::LOGMODE_END:
-        Header = "„¤";
-        break;
-    default:
-        Header = "„ ";
-        break;
-    }
-
-    String^ log = String::Format("{0}{1}", Header, Log);
+    return ret;
 }
