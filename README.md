@@ -1,4 +1,4 @@
-GNSNet [C++/CLI Network Wrappers]
+GNSNet [C++/CLI Network simplifier]
 =====================================
 Library that simplifies network programming in C++/CLI,
 the library provides a very simplified interface for communicating to the 
