@@ -2,17 +2,16 @@ GNSNet [C++/CLI Network simplifier]
 =====================================
 Library that simplifies network programming in C++/CLI,
 the library provides a very simplified interface for communicating to the 
-network using TCP/IP sockets, UDP sockets and also includes a class library that can be used as an FTP client. This library is also packaged with a simple yet fully functioning multi-client TCP/IP server through the StartService() method.
+network using TCP/IP sockets, UDP sockets and also includes a class library that can be used as an FTP client. Includes a simple multi-client TCP/IP server through the StartService() method.
 
 Platform
 ============================
-This library can be used in any .NET language under .NET framework 2.0 and up.
-It is written in C++/CLI but it can be compiled as a DLL and can be easily used
-using other .NET languages like C# and VB.NET.
+.NET framework 2.0
 
 Requirement
 ============================
-.NET framework 2.0 and up
+Visual Studio, 
+.NET framework 2.0 or higher
 
 License
 ============================
