@@ -15,7 +15,7 @@ Visual Studio,
 
 License
 ============================
-Copyright (c) 2013, Gerald Selvino <heiroglypix@gmail.com>
+Copyright (c) 2013, Gerald Selvino <gerald.selvino@protonmail.com>
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
