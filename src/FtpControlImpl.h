@@ -1,6 +1,6 @@
 /**********************************************************
-* Copyright (c) 2013, Gerald Selvino <geraldsv@outlook.com>
-* All rights reserved.
+* Copyright (c) 2013, Gerald Selvino
+* <gerald.selvino@protonmail.com> All rights reserved.
 *
 * This is the implementation class of FtpControl, use as an
 * FTP client to FTP Servers, functions supported are

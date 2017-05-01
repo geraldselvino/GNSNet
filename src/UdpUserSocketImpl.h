@@ -1,6 +1,6 @@
 /**********************************************************
-* Copyright (c) 2013, Gerald Selvino <geraldsv@outlook.com>
-* All rights reserved.
+* Copyright (c) 2013, Gerald Selvino
+* <gerald.selvino@protonmail.com> All rights reserved.
 *
 * This is the implementation class of UdpUserSocket, use to
 * send and receive UDP packets/messages.

@@ -1,6 +1,6 @@
 /**********************************************************
-* Copyright (c) 2013, Gerald Selvino <geraldsv@outlook.com>
-* All rights reserved.
+* Copyright (c) 2013, Gerald Selvino
+* <gerald.selvino@protonmail.com> All rights reserved.
 *
 * This is the implementation class of ClientSocket, use to
 * create a TCP/IP client. Provides the standard socket

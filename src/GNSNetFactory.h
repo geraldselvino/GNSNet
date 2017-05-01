@@ -1,6 +1,6 @@
 /**********************************************************
-* Copyright (c) 2013, Gerald Selvino <geraldsv@outlook.com>
-* All rights reserved.
+* Copyright (c) 2013, Gerald Selvino
+* <gerald.selvino@protonmail.com> All rights reserved.
 *
 * The main factory class, used to obtain an instance of 
 * the network classes
